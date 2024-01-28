@@ -20,15 +20,13 @@ func main() {
 
 	sleepingBarbersMutex, waitingAreaMutex := &sync.Mutex{}, &sync.Mutex{}
 
-	ctx, cancel := context.WithTimeout(context.Background(), constants.ShopOpenDuration*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), constants.ShopOpenDurationSeconds*time.Second)
 
 	wg.Add(1)
 	go barbers.StartBarbers(&wg, ctx, cancel, barberSeats, waitingArea, waitingAreaMutex, sleepingBarbers)
 
 	wg.Add(1)
 	go customers.StartCustomers(&wg, ctx, cancel, barberSeats, waitingArea, waitingAreaMutex, sleepingBarbers, sleepingBarbersMutex)
-
-	<-ctx.Done()
 
 	wg.Wait()
 }

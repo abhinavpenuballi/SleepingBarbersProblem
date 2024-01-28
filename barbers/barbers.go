@@ -20,6 +20,8 @@ func StartBarbers(callerWG *sync.WaitGroup, ctx context.Context, cancel context.
 	}
 
 	wg.Wait()
+
+	fmt.Println("All barbers went home")
 }
 
 func barber(ctx context.Context, barberID int, barberSeats []int, waitingArea <-chan int, waitingAreaMutex *sync.Mutex, sleepingBarbers chan<- chan int) {
@@ -47,11 +49,11 @@ func barber(ctx context.Context, barberID int, barberSeats []int, waitingArea <-
 func doHairCut(barberID int, barberSeats []int) bool {
 	if barberSeats[barberID-1] > 0 {
 		fmt.Println("Barber", barberID, "is doing hair cut for customer", barberSeats[barberID-1])
-		time.Sleep(10 * time.Second)
+		time.Sleep(constants.TimePerHairCutSeconds * time.Second)
 		fmt.Println("Barber", barberID, "has done hair cut for customer", barberSeats[barberID-1])
 
 		barberSeats[barberID-1] = 0
-		time.Sleep(500 * time.Millisecond)
+		time.Sleep(constants.BreakBetweenHairCutsMilliseconds * time.Millisecond)
 
 		return true
 	}

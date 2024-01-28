@@ -17,7 +17,7 @@ func StartCustomers(callerWG *sync.WaitGroup, ctx context.Context, cancel contex
 	for closed, customerID := false, 1; !closed; customerID++ {
 		wg.Add(1)
 		go cusomter(customerID, barberSeats, waitingArea, waitingAreaMutex, sleepingBarbers, sleepingBarbersMutex)
-		time.Sleep(500 * time.Millisecond)
+		time.Sleep(constants.TimeBetweenCustomersMilliseconds * time.Millisecond)
 
 		select {
 		case <-ctx.Done():
@@ -27,7 +27,6 @@ func StartCustomers(callerWG *sync.WaitGroup, ctx context.Context, cancel contex
 	}
 
 	fmt.Println("Shop is closed, no longer accepting new customers")
-
 	close(waitingArea)
 
 	wg.Wait()
